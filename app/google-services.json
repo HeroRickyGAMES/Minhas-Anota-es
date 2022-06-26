@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "619499890624",
+    "firebase_url": "https://minhasanotacoesdb-default-rtdb.firebaseio.com",
+    "project_id": "minhasanotacoesdb",
+    "storage_bucket": "minhasanotacoesdb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:619499890624:android:c08f2d7953c800a37bca25",
+        "android_client_info": {
+          "package_name": "com.herorickystudios.minhasanotaes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "619499890624-oisfkkvoqcmru6f8omv2houtbuv1aeer.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwZFD1Rus5QoTnbkxAhskYK8TGo77-fEQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "619499890624-oisfkkvoqcmru6f8omv2houtbuv1aeer.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
