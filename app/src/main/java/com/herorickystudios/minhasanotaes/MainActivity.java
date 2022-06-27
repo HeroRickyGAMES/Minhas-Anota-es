@@ -83,12 +83,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onUnityBannerUnloaded(String s) {
-
+                if(testMode == true){
+                    Toast.makeText(MainActivity.this, "Não carregou!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onUnityBannerShow(String s) {
-
+                if(testMode == true){
+                    Toast.makeText(MainActivity.this, "Apareceu o banner", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -98,19 +102,19 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onUnityBannerHide(String s) {
-
+                Toast.makeText(MainActivity.this, "Está escondido!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onUnityBannerError(String s) {
-
+                if(testMode == true){
+                    Toast.makeText(MainActivity.this, "Ocorreu um erro...", Toast.LENGTH_SHORT).show();
+                }
             }
         };
 
 
         UnityBanners.setBannerListener(bannerListener);
-
-
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -144,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                     referenciaP.child(uid).child("anotacao").setValue(textoRecuperado);
 
                     UnityBanners.loadBanner(MainActivity.this, bannerPlacement);
+
                 }
             }
         });
@@ -162,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
                 String anotacao = snapshot.child("Usuarios").child(uid).child("anotacao").getValue().toString();
 
                 editAnotacao.setText(anotacao);
+
+
             }
 
             @Override
@@ -188,11 +195,13 @@ public class MainActivity extends AppCompatActivity {
 
         if(networkInfo != null && networkInfo.isConnected()){
 
-            System.out.println("Está online!");
-
+            if(testMode == true) {
+                System.out.println("Está online!");
+            }
         }else{
-            System.out.println("Está Offline!");
-
+            if(testMode == true) {
+                System.out.println("Está Offline!");
+            }
             Toast.makeText(this, "Você está offline! Por favor, verifique sua conexão com a rede e tente novamente!", Toast.LENGTH_SHORT).show();
             finish();
             System.exit(0);
