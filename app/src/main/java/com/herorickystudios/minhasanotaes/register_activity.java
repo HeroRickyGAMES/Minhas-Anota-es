@@ -13,6 +13,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,10 +28,22 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.unity3d.ads.IUnityAdsLoadListener;
+import com.unity3d.ads.IUnityAdsShowListener;
+import com.unity3d.ads.UnityAds;
+import com.unity3d.services.banners.IUnityBannerListener;
+import com.unity3d.services.banners.UnityBanners;
 
 import java.util.concurrent.Executor;
 
 public class register_activity extends AppCompatActivity {
+
+    private String GameID = "4814302";
+    private String interAD = "Interstitial_Android";
+    private String bannerPlacement = "Banner_Android";
+    private String interPlacement = "Interstitial_Android";
+    private String rewardedPlacement="Rewarded_Android";
+    private boolean testMode = false;
 
     String[] menssagens = {"Preencha todos os campos para continuar", "Cadastro feito com sucesso!"};
 
@@ -48,6 +61,68 @@ public class register_activity extends AppCompatActivity {
         editSenha = findViewById(R.id.editSenha);
 
         checkinternet();
+
+        UnityAds.initialize(this, GameID, testMode);
+
+        IUnityBannerListener bannerListener = new IUnityBannerListener() {
+            @Override
+            public void onUnityBannerLoaded(String s, View view) {
+                ((ViewGroup) findViewById(R.id.banner_ad)).removeView(view);
+                ((ViewGroup) findViewById(R.id.banner_ad)).addView(view);
+            }
+
+            @Override
+            public void onUnityBannerUnloaded(String s) {
+                if(testMode == true){
+                    Toast.makeText(register_activity.this, "Não carregou!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onUnityBannerShow(String s) {
+                if(testMode == true){
+                    Toast.makeText(register_activity.this, "Apareceu o banner", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onUnityBannerClick(String s) {
+
+            }
+
+            @Override
+            public void onUnityBannerHide(String s) {
+                if(testMode == true){
+                Toast.makeText(register_activity.this, "Está escondido!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onUnityBannerError(String s) {
+                if(testMode == true){
+                    Toast.makeText(register_activity.this, "Ocorreu um erro...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        UnityBanners.setBannerListener(bannerListener);
+
+        IUnityAdsLoadListener adsLoadListener = new IUnityAdsLoadListener() {
+            @Override
+            public void onUnityAdsAdLoaded(String s) {
+                if(testMode == true) {
+                    Toast.makeText(register_activity.this, "Iniciado!", Toast.LENGTH_SHORT).show();
+                }
+                UnityBanners.loadBanner(register_activity.this, bannerPlacement);
+            }
+
+            @Override
+            public void onUnityAdsFailedToLoad(String s, UnityAds.UnityAdsLoadError unityAdsLoadError, String s1) {
+
+            }
+        };
+        UnityAds.load(rewardedPlacement, adsLoadListener);
+
     }
 
     public void registerbtn(View view){
