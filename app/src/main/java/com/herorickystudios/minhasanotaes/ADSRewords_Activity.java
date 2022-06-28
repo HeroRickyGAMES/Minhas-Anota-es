@@ -1,14 +1,20 @@
 package com.herorickystudios.minhasanotaes;
 
+//Programado por HeroRickyGames
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
-import com.unity3d.ads.IUnityAdsListener;
+import com.unity3d.ads.IUnityAdsInitializationListener;
+import com.unity3d.ads.IUnityAdsLoadListener;
+import com.unity3d.ads.IUnityAdsShowListener;
 import com.unity3d.ads.UnityAds;
+
 
 public class ADSRewords_Activity extends AppCompatActivity {
 
@@ -24,73 +30,67 @@ public class ADSRewords_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adsrewords);
 
-        UnityAds.initialize(this, GameID, testMode);
 
-        IUnityAdsListener rewardedListner = new IUnityAdsListener() {
+        IUnityAdsInitializationListener initializationListener = new IUnityAdsInitializationListener() {
             @Override
-            public void onUnityAdsReady(String s) {
-                if(testMode == true){
-                    Toast.makeText(ADSRewords_Activity.this, "Está pronto!", Toast.LENGTH_SHORT).show();
-                }
-                if(UnityAds.isReady()){
-
-                    if(testMode == true){
-                        Toast.makeText(ADSRewords_Activity.this, "Executou!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    UnityAds.show(ADSRewords_Activity.this, rewardedPlacement);
+            public void onInitializationComplete() {
+                if(testMode == true) {
+                    Toast.makeText(ADSRewords_Activity.this, "Iniciou!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onUnityAdsStart(String s) {
-
-            }
-
-            @Override
-            public void onUnityAdsFinish(String s, UnityAds.FinishState finishState) {
-                // Implement conditional logic for each ad completion status:
-
-                System.out.println(finishState);
-                String Verifica = String.valueOf(finishState);
-                String completo = "COMPLETED";
-
-                System.out.println(Verifica);
-
-                if (Verifica == completo) {
-                    // Reward the user for watching the ad to completion.
-
-                    if(testMode == true){
-                        Toast.makeText(ADSRewords_Activity.this, "Completed", Toast.LENGTH_SHORT).show();
-                    }
-
-                    Intent intent = new Intent(ADSRewords_Activity.this, MainActivity.class);
-                    startActivity(intent);
-
-                    onDestroy();
-
-
-                } else if (finishState == UnityAds.FinishState.SKIPPED) {
-                    // Do not reward the user for skipping the ad.
-                    Toast.makeText(ADSRewords_Activity.this, "Skipped", Toast.LENGTH_SHORT).show();
-                } else if (finishState == UnityAds.FinishState.ERROR) {
-                    // Log an error.
-                    Toast.makeText(ADSRewords_Activity.this, "Error", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onUnityAdsError(UnityAds.UnityAdsError unityAdsError, String s) {
-                Toast.makeText(ADSRewords_Activity.this,"Error "+unityAdsError,Toast.LENGTH_SHORT).show();
+            public void onInitializationFailed(UnityAds.UnityAdsInitializationError unityAdsInitializationError, String s) {
+                Toast.makeText(ADSRewords_Activity.this, "Ocorreu um erro", Toast.LENGTH_SHORT).show();
             }
         };
 
-        if (UnityAds.isReady(rewardedPlacement)) {
-            Toast.makeText(this, "Ad", Toast.LENGTH_SHORT).show();
-            UnityAds.show(ADSRewords_Activity.this, rewardedPlacement);
-        }
-        UnityAds.setListener(rewardedListner);
-        UnityAds.load(interPlacement);
+        UnityAds.initialize(this, GameID, testMode, initializationListener);
 
+
+
+        IUnityAdsShowListener unityAdsShowListener = new IUnityAdsShowListener() {
+            @Override
+            public void onUnityAdsShowFailure(String s, UnityAds.UnityAdsShowError unityAdsShowError, String s1) {
+                Toast.makeText(ADSRewords_Activity.this, "Ocorreu um erro!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUnityAdsShowStart(String s) {
+                if(testMode == true) {
+                    Toast.makeText(ADSRewords_Activity.this, "Start!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onUnityAdsShowClick(String s) {
+
+            }
+
+            @Override
+            public void onUnityAdsShowComplete(String s, UnityAds.UnityAdsShowCompletionState unityAdsShowCompletionState) {
+                Intent intent = new Intent(ADSRewords_Activity.this, MainActivity.class);
+                startActivity(intent);
+                    if(testMode == true) {
+                        Toast.makeText(ADSRewords_Activity.this, "Completo!", Toast.LENGTH_SHORT).show();
+                    }
+            }
+        };
+
+        IUnityAdsLoadListener adsLoadListener = new IUnityAdsLoadListener() {
+            @Override
+            public void onUnityAdsAdLoaded(String s) {
+                if(testMode == true) {
+                    Toast.makeText(ADSRewords_Activity.this, "Iniciado!", Toast.LENGTH_SHORT).show();
+                }
+                UnityAds.show(ADSRewords_Activity.this, interPlacement, unityAdsShowListener);
+            }
+
+            @Override
+            public void onUnityAdsFailedToLoad(String s, UnityAds.UnityAdsLoadError unityAdsLoadError, String s1) {
+
+            }
+        };
+        UnityAds.load(interPlacement, adsLoadListener);
     }
 }

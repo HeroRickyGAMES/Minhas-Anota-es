@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.herorickystudios.minhasanotaes.databinding.ActivityMainBinding;
+import com.unity3d.ads.IUnityAdsLoadListener;
 import com.unity3d.ads.UnityAds;
 import com.unity3d.services.banners.IUnityBannerListener;
 import com.unity3d.services.banners.UnityBanners;
@@ -113,8 +114,21 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
         UnityBanners.setBannerListener(bannerListener);
+
+        IUnityAdsLoadListener adsLoadListener = new IUnityAdsLoadListener() {
+            @Override
+            public void onUnityAdsAdLoaded(String s) {
+                Toast.makeText(MainActivity.this, "Iniciado!", Toast.LENGTH_SHORT).show();
+                UnityBanners.loadBanner(MainActivity.this, bannerPlacement);
+            }
+
+            @Override
+            public void onUnityAdsFailedToLoad(String s, UnityAds.UnityAdsLoadError unityAdsLoadError, String s1) {
+
+            }
+        };
+        UnityAds.load(rewardedPlacement, adsLoadListener);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -147,8 +161,6 @@ public class MainActivity extends AppCompatActivity {
 
                     referenciaP.child(uid).child("anotacao").setValue(textoRecuperado);
 
-                    UnityBanners.loadBanner(MainActivity.this, bannerPlacement);
-
                 }
             }
         });
@@ -168,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
                 editAnotacao.setText(anotacao);
 
+                UnityBanners.loadBanner(MainActivity.this, bannerPlacement);
 
             }
 
