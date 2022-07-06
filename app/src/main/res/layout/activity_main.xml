@@ -19,8 +19,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:theme="@style/Theme.MinhasAnotações.AppBarOverlay" >
+        android:layout_height="159dp"
+        android:theme="@style/Theme.MinhasAnotações.AppBarOverlay">
 
         <ImageView
             android:id="@+id/imageView"
@@ -28,11 +28,20 @@
             android:layout_height="121dp"
             android:layout_gravity="center"
             app:srcCompat="@drawable/logo" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="48dp"
+            android:layout_height="35dp"
+            android:onClick="serverStatusbtn"
+            app:srcCompat="@drawable/ic_notifications" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
         android:id="@+id/include"
-        layout="@layout/content_main" />
+        layout="@layout/content_main"
+        android:layout_height="569dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

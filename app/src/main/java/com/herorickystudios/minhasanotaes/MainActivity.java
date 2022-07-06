@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private String interAD = "Interstitial_Android";
     private String bannerPlacement = "Banner_Android";
     private String interPlacement = "Interstitial_Android";
-    private String rewardedPlacement="Rewarded_Android";
+    private String rewardedPlacement = "Rewarded_Android";
     private boolean testMode = false;
 
 
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference referenciaP = FirebaseDatabase.getInstance().getReference("Usuarios");
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,14 +83,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onUnityBannerUnloaded(String s) {
-                if(testMode == true){
+                if (testMode == true) {
                     Toast.makeText(MainActivity.this, "Não carregou!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onUnityBannerShow(String s) {
-                if(testMode == true){
+                if (testMode == true) {
                     Toast.makeText(MainActivity.this, "Apareceu o banner", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onUnityBannerError(String s) {
-                if(testMode == true){
+                if (testMode == true) {
                     Toast.makeText(MainActivity.this, "Ocorreu um erro...", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -144,10 +143,10 @@ public class MainActivity extends AppCompatActivity {
 
                 String textoRecuperado = editAnotacao.getText().toString();
 
-                if( textoRecuperado.equals("") ){
+                if (textoRecuperado.equals("")) {
                     Snackbar.make(view, "Preencha a anotação!", Snackbar.LENGTH_LONG).show();
 
-                }else{
+                } else {
 
                     //preferencias.salvarAnotacao( textoRecuperado );
 
@@ -201,18 +200,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void checkinternet(){
+    public void checkinternet() {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if(networkInfo != null && networkInfo.isConnected()){
+        if (networkInfo != null && networkInfo.isConnected()) {
 
-            if(testMode == true) {
+            if (testMode == true) {
                 System.out.println("Está online!");
             }
-        }else{
-            if(testMode == true) {
+        } else {
+            if (testMode == true) {
                 System.out.println("Está Offline!");
             }
             Toast.makeText(this, "Você está offline! Por favor, verifique sua conexão com a rede e tente novamente!", Toast.LENGTH_SHORT).show();
@@ -225,6 +224,105 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         Intent intent = new Intent(this, Autenticacao_activity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+
+        //Reinicia os anuncios inapp
+        UnityAds.initialize(this, GameID, testMode);
+
+        IUnityBannerListener bannerListener = new IUnityBannerListener() {
+            @Override
+            public void onUnityBannerLoaded(String s, View view) {
+                ((ViewGroup) findViewById(R.id.banner_ad)).removeView(view);
+                ((ViewGroup) findViewById(R.id.banner_ad)).addView(view);
+            }
+
+            @Override
+            public void onUnityBannerUnloaded(String s) {
+                if (testMode == true) {
+                    Toast.makeText(MainActivity.this, "Não carregou!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onUnityBannerShow(String s) {
+                if (testMode == true) {
+                    Toast.makeText(MainActivity.this, "Apareceu o banner", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onUnityBannerClick(String s) {
+
+            }
+
+            @Override
+            public void onUnityBannerHide(String s) {
+                Toast.makeText(MainActivity.this, "Está escondido!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUnityBannerError(String s) {
+                if (testMode == true) {
+                    Toast.makeText(MainActivity.this, "Ocorreu um erro...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        UnityBanners.setBannerListener(bannerListener);
+
+        IUnityAdsLoadListener adsLoadListener = new IUnityAdsLoadListener() {
+            @Override
+            public void onUnityAdsAdLoaded(String s) {
+                Toast.makeText(MainActivity.this, "Iniciado!", Toast.LENGTH_SHORT).show();
+                UnityBanners.loadBanner(MainActivity.this, bannerPlacement);
+            }
+
+            @Override
+            public void onUnityAdsFailedToLoad(String s, UnityAds.UnityAdsLoadError unityAdsLoadError, String s1) {
+
+            }
+        };
+        UnityAds.load(rewardedPlacement, adsLoadListener);
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+
+        //Quando o aplicativo entra em segundo plano ele executa essa função!
+        String textoRecuperado = editAnotacao.getText().toString();
+
+        if(textoRecuperado.equals(""))
+
+        {
+            Toast.makeText(this, "Anotação vazia!", Toast.LENGTH_SHORT).show();
+
+        }else
+
+        {
+
+            Toast.makeText(this, "Anotação Salva com sucesso enquanto o app fica em segundo plano!", Toast.LENGTH_SHORT).show();
+
+            editAnotacao.getText();
+
+            editAnotacao.setText(textoRecuperado);
+
+            String uid = usuario.getUid();
+
+            referenciaP.child(uid).child("anotacao").setValue(textoRecuperado);
+
+            super.onPause();
+
+        }
+    }
+
+    public void serverStatusbtn(View view){
+        Intent intent = new Intent(this, ServerStatus_Activity.class);
         startActivity(intent);
     }
 }
