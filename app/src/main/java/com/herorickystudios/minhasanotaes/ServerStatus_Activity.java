@@ -15,7 +15,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.unity3d.services.banners.UnityBanners;
 
 public class ServerStatus_Activity extends AppCompatActivity {
 

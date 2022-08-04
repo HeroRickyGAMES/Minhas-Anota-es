@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,20 +23,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.unity3d.ads.IUnityAdsLoadListener;
-import com.unity3d.ads.IUnityAdsShowListener;
-import com.unity3d.ads.UnityAds;
-import com.unity3d.services.banners.IUnityBannerListener;
-import com.unity3d.services.banners.UnityBanners;
+import com.facebook.ads.*;
 
 public class loginActivity extends AppCompatActivity {
 
-    private String GameID = "4814302";
-    private String interAD = "Interstitial_Android";
-    private String bannerPlacement = "Banner_Android";
-    private String interPlacement = "Interstitial_Android";
-    private String rewardedPlacement="Rewarded_Android";
-    private boolean testMode = false;
+    private AdView adView;
+
+    private boolean testMode = true;
 
     private TextView editEmaillg, editSenhalg;
 
@@ -50,66 +44,37 @@ public class loginActivity extends AppCompatActivity {
         editEmaillg = findViewById(R.id.editEmaillg);
         editSenhalg = findViewById(R.id.editSenhalg);
 
-        UnityAds.initialize(this, GameID, testMode);
+        adView = new AdView(this, "IMG_16_9_APP_INSTALL#326901805789557_561404239005978", AdSize.BANNER_HEIGHT_50);
 
-
-        IUnityBannerListener bannerListener = new IUnityBannerListener() {
+        AdListener adListener = new AdListener() {
             @Override
-            public void onUnityBannerLoaded(String s, View view) {
-                ((ViewGroup) findViewById(R.id.banner_ad)).removeView(view);
-                ((ViewGroup) findViewById(R.id.banner_ad)).addView(view);
-            }
-
-            @Override
-            public void onUnityBannerUnloaded(String s) {
-                if(testMode == true){
-                    Toast.makeText(loginActivity.this, "Não carregou!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onUnityBannerShow(String s) {
-                if(testMode == true){
-                    Toast.makeText(loginActivity.this, "Apareceu o banner", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onUnityBannerClick(String s) {
+            public void onError(Ad ad, AdError adError) {
 
             }
 
             @Override
-            public void onUnityBannerHide(String s) {
-                Toast.makeText(loginActivity.this, "Está escondido!", Toast.LENGTH_SHORT).show();
+            public void onAdLoaded(Ad ad) {
+
             }
 
             @Override
-            public void onUnityBannerError(String s) {
-                if(testMode == true){
-                    Toast.makeText(loginActivity.this, "Ocorreu um erro...", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
+            public void onAdClicked(Ad ad) {
 
-        UnityBanners.setBannerListener(bannerListener);
-
-        IUnityAdsLoadListener adsLoadListener = new IUnityAdsLoadListener() {
-            @Override
-            public void onUnityAdsAdLoaded(String s) {
-                if(testMode == true) {
-                    Toast.makeText(loginActivity.this, "Iniciado!", Toast.LENGTH_SHORT).show();
-                }
-
-                UnityBanners.loadBanner(loginActivity.this, bannerPlacement);
             }
 
             @Override
-            public void onUnityAdsFailedToLoad(String s, UnityAds.UnityAdsLoadError unityAdsLoadError, String s1) {
+            public void onLoggingImpression(Ad ad) {
 
             }
         };
-        UnityAds.load(rewardedPlacement, adsLoadListener);
+// Find the Ad Container
+        LinearLayout adContainer = (LinearLayout) findViewById(R.id.banner_container);
+
+// Add the ad view to your activity layout
+        adContainer.addView(adView);
+
+// Request an ad
+        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build());
 
         checkinternet();
     }

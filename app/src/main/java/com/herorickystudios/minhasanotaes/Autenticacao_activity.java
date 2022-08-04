@@ -49,7 +49,7 @@ public class Autenticacao_activity extends AppCompatActivity {
             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 notificarUsuario("Autenticação Aprovada!");
-                Intent intent = new Intent(getApplicationContext(), ADSRewords_Activity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
 

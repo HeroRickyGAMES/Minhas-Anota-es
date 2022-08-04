@@ -3,9 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/MinhasAnotaes/app/src/main/res/layout/activity_adsrewords.xml" value="0.358695652173913" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/MinhasAnotaes/app/src/main/res/layout/activity_autenticacao.xml" value="0.3578125" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/MinhasAnotaes/app/src/main/res/layout/activity_login.xml" value="0.358695652173913" />
-        <entry key="..\:/Users/Administrator/AndroidStudioProjects/MinhasAnotaes/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/MinhasAnotaes/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/MinhasAnotaes/app/src/main/res/layout/activity_register.xml" value="0.358695652173913" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/MinhasAnotaes/app/src/main/res/layout/activity_server_status.xml" value="0.358695652173913" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/MinhasAnotaes/app/src/main/res/layout/content_main.xml" value="0.358695652173913" />

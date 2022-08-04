@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,22 +29,14 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.unity3d.ads.IUnityAdsLoadListener;
-import com.unity3d.ads.IUnityAdsShowListener;
-import com.unity3d.ads.UnityAds;
-import com.unity3d.services.banners.IUnityBannerListener;
-import com.unity3d.services.banners.UnityBanners;
-
+import com.facebook.ads.*;
 import java.util.concurrent.Executor;
 
 public class register_activity extends AppCompatActivity {
 
-    private String GameID = "4814302";
-    private String interAD = "Interstitial_Android";
-    private String bannerPlacement = "Banner_Android";
-    private String interPlacement = "Interstitial_Android";
-    private String rewardedPlacement="Rewarded_Android";
-    private boolean testMode = false;
+    private boolean testMode = true;
+
+    private AdView adView;
 
     String[] menssagens = {"Preencha todos os campos para continuar", "Cadastro feito com sucesso!"};
 
@@ -60,68 +53,40 @@ public class register_activity extends AppCompatActivity {
         editEmail = findViewById(R.id.editEmail);
         editSenha = findViewById(R.id.editSenha);
 
+        adView = new AdView(this, "IMG_16_9_APP_INSTALL#326901805789557_561404239005978", AdSize.BANNER_HEIGHT_50);
+
+        AdListener adListener = new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        };
+
+// Find the Ad Container
+        LinearLayout adContainer = (LinearLayout) findViewById(R.id.banner_container);
+
+// Add the ad view to your activity layout
+        adContainer.addView(adView);
+
+// Request an ad
+        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build());
+
         checkinternet();
-
-        UnityAds.initialize(this, GameID, testMode);
-
-        IUnityBannerListener bannerListener = new IUnityBannerListener() {
-            @Override
-            public void onUnityBannerLoaded(String s, View view) {
-                ((ViewGroup) findViewById(R.id.banner_ad)).removeView(view);
-                ((ViewGroup) findViewById(R.id.banner_ad)).addView(view);
-            }
-
-            @Override
-            public void onUnityBannerUnloaded(String s) {
-                if(testMode == true){
-                    Toast.makeText(register_activity.this, "Não carregou!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onUnityBannerShow(String s) {
-                if(testMode == true){
-                    Toast.makeText(register_activity.this, "Apareceu o banner", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onUnityBannerClick(String s) {
-
-            }
-
-            @Override
-            public void onUnityBannerHide(String s) {
-                if(testMode == true){
-                Toast.makeText(register_activity.this, "Está escondido!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onUnityBannerError(String s) {
-                if(testMode == true){
-                    Toast.makeText(register_activity.this, "Ocorreu um erro...", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-
-        UnityBanners.setBannerListener(bannerListener);
-
-        IUnityAdsLoadListener adsLoadListener = new IUnityAdsLoadListener() {
-            @Override
-            public void onUnityAdsAdLoaded(String s) {
-                if(testMode == true) {
-                    Toast.makeText(register_activity.this, "Iniciado!", Toast.LENGTH_SHORT).show();
-                }
-                UnityBanners.loadBanner(register_activity.this, bannerPlacement);
-            }
-
-            @Override
-            public void onUnityAdsFailedToLoad(String s, UnityAds.UnityAdsLoadError unityAdsLoadError, String s1) {
-
-            }
-        };
-        UnityAds.load(rewardedPlacement, adsLoadListener);
 
     }
 
