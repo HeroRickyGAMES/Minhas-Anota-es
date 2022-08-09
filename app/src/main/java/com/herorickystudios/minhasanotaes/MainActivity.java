@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         AudienceNetworkAds.initialize(this);
 
-        adView = new AdView(this, "IMG_16_9_APP_INSTALL#326901805789557_561404239005978", AdSize.BANNER_HEIGHT_50);
+        adView = new AdView(this, "326901805789557_561404239005978", AdSize.BANNER_HEIGHT_50);
 
         interstitialAd = new InterstitialAd(this, "326901805789557_561568765656192");
 

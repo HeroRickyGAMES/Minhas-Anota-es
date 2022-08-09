@@ -44,7 +44,7 @@ public class loginActivity extends AppCompatActivity {
         editEmaillg = findViewById(R.id.editEmaillg);
         editSenhalg = findViewById(R.id.editSenhalg);
 
-        adView = new AdView(this, "IMG_16_9_APP_INSTALL#326901805789557_561404239005978", AdSize.BANNER_HEIGHT_50);
+        adView = new AdView(this, "326901805789557_561404239005978", AdSize.BANNER_HEIGHT_50);
 
         AdListener adListener = new AdListener() {
             @Override
