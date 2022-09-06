@@ -2,22 +2,33 @@ package com.herorickystudios.minhasanotaes;
 
 //Programado por HeroRickyGames
 
+import static android.Manifest.permission.ACCESS_NOTIFICATION_POLICY;
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.biometrics.BiometricManager;
 import android.hardware.biometrics.BiometricPrompt;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     //private AnotacaoPreferencias preferencias;
     private EditText editAnotacao;
 
+    private int NOTIFY_PERMISSION_CODE = 200;
+
     private final String TAG = ADSRewords_Activity.class.getSimpleName();
     private InterstitialAd interstitialAd;
 
@@ -59,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference referenciaP = FirebaseDatabase.getInstance().getReference("Usuarios");
 
 
+    @RequiresApi(api = 33)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,8 +206,6 @@ public class MainActivity extends AppCompatActivity {
                 String anotacao = snapshot.child("Usuarios").child(uid).child("anotacao").getValue().toString();
 
                 editAnotacao.setText(anotacao);
-
-
             }
 
             @Override
@@ -210,6 +222,25 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         checkinternet();
+
+
+
+  /*      if(ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
+                == PackageManager.PERMISSION_GRANTED){
+
+        }else{
+
+            Toast.makeText(MainActivity.this, "Habilite as notificações nas configurações para receber as atualizações sobre o servidor", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "ou sobre atualizações do aplicativo!", Toast.LENGTH_LONG).show();
+        }*/
+
+
+        if(checkPermission()){
+            Toast.makeText(this, "Permissão garantida!", Toast.LENGTH_SHORT).show();
+        }else{
+            ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, NOTIFY_PERMISSION_CODE);
+        }
 
     }
 
@@ -279,5 +310,31 @@ public class MainActivity extends AppCompatActivity {
     public void serverStatusbtn(View view){
         Intent intent = new Intent(this, ServerStatus_Activity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == NOTIFY_PERMISSION_CODE){
+            if(grantResults.length>0){
+                int not = grantResults[0];
+
+                boolean checkNot = not == PackageManager.PERMISSION_GRANTED;
+            }
+            else{
+                Toast.makeText(MainActivity.this, "Habilite as notificações nas configurações para receber as atualizações sobre o servidor", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "ou sobre atualizações do aplicativo!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @RequiresApi(api = 33)
+    public boolean checkPermission(){
+
+        int result = ActivityCompat.checkSelfPermission(this ,POST_NOTIFICATIONS);
+
+        return result == PackageManager.PERMISSION_GRANTED;
+
     }
 }
