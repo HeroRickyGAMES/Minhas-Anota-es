@@ -7,10 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.view.View;
-import android.view.ViewGroup;
+
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,8 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.facebook.ads.*;
 
 public class loginActivity extends AppCompatActivity {
@@ -35,7 +35,7 @@ public class loginActivity extends AppCompatActivity {
 
     String[] menssagens = {"Preencha todos os campos para continuar", "Login feito com sucesso!"};
 
-
+    int AndroidVersionSDK = Build.VERSION.SDK_INT;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,8 +101,13 @@ public class loginActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Toast.makeText(loginActivity.this, "Logado com Sucesso", Toast.LENGTH_SHORT).show();
 
-                            Intent intent = new Intent(getApplicationContext(), Autenticacao_activity.class);
-                            startActivity(intent);
+                    if(AndroidVersionSDK < 33){
+                        Intent intent = new Intent(getApplicationContext(), Autenticacao_activity.class);
+                        startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(getApplicationContext(), verifyNotificationPermission.class);
+                        startActivity(intent);
+                    }
 
                 }
             }
@@ -124,8 +129,14 @@ public class loginActivity extends AppCompatActivity {
 
         if(usuarioLogado != null){
 
-            Intent intent = new Intent(getApplicationContext(), Autenticacao_activity.class);
-            startActivity(intent);
+            if(AndroidVersionSDK < 33){
+                Intent intent = new Intent(getApplicationContext(), Autenticacao_activity.class);
+                startActivity(intent);
+            }else{
+                Intent intent = new Intent(getApplicationContext(), verifyNotificationPermission.class);
+                startActivity(intent);
+            }
+
 
         }
 

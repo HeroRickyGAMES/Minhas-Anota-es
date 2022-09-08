@@ -1,23 +1,22 @@
 package com.herorickystudios.minhasanotaes;
 
-import static android.hardware.biometrics.BiometricManager.Authenticators.BIOMETRIC_STRONG;
-import static android.hardware.biometrics.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
+
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import androidx.biometric.BiometricPrompt;
-import android.os.Build;
+
 import android.os.Bundle;
 import android.widget.Toast;
-
 
 import java.util.concurrent.Executor;
 
 public class Autenticacao_activity extends AppCompatActivity {
+
+
 
 
     @Override
@@ -34,6 +33,7 @@ public class Autenticacao_activity extends AppCompatActivity {
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG |BiometricManager.Authenticators.DEVICE_CREDENTIAL)
                 .build();
         getPrompt().authenticate(promptInfo);
+
     }
 
     private BiometricPrompt getPrompt(){
@@ -65,4 +65,5 @@ public class Autenticacao_activity extends AppCompatActivity {
     private void notificarUsuario(String menssage){
         Toast.makeText(this, menssage, Toast.LENGTH_SHORT).show();
     }
+
 }
