@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        //Database instruções
+        //Database push
         DatabaseReference reference = referencia.getReference();
 
         reference.addValueEventListener(new ValueEventListener() {
