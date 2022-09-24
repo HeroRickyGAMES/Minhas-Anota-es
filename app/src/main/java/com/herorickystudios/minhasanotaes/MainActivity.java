@@ -3,6 +3,7 @@ package com.herorickystudios.minhasanotaes;
 //Programado por HeroRickyGames
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
@@ -189,12 +191,38 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
+//set icon
+                        .setIcon(R.drawable.ic_baseline_save_alt_24)
+//set title
+                        .setTitle("Por favor espere!")
+//set message
+                        .setMessage("Espere enquanto carregamos informações do Banco de dados")
+
+                        .setNegativeButton("Dispensar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+
+                        .show();
+
+
+
                 String uid = usuario.getUid();
 
                 Log.i("FIREBASE", snapshot.getValue().toString());
                 String anotacao = snapshot.child("Usuarios").child(uid).child("anotacao").getValue().toString();
 
                 editAnotacao.setText(anotacao);
+
+                if(anotacao.equals(editAnotacao.getText().toString())){
+
+                    alertDialog.dismiss();
+
+                }
+
             }
 
             @Override
