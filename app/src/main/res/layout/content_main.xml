@@ -13,7 +13,7 @@
         android:background="@android:color/transparent"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Digite sua Anotação"
+        android:hint="@string/digite_sua_anota_o"
         android:inputType="textMultiLine"
         android:padding="18dp"
         android:singleLine="false"
