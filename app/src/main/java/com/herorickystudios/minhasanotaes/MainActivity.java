@@ -33,24 +33,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.herorickystudios.minhasanotaes.databinding.ActivityMainBinding;
+import com.startapp.sdk.adsbase.StartAppAd;
+import com.startapp.sdk.adsbase.StartAppSDK;
 
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import com.facebook.ads.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    Boolean testMode = true;
+    Boolean testMode = false;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-    private AdView adView;
     //private AnotacaoPreferencias preferencias;
     private EditText editAnotacao;
-
-
-    private final String TAG = ADSRewords_Activity.class.getSimpleName();
-    private InterstitialAd interstitialAd;
 
     private FirebaseDatabase referencia = FirebaseDatabase.getInstance();
 
@@ -71,88 +67,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         editAnotacao = findViewById(R.id.editAnotacao);
 
-        AudienceNetworkAds.initialize(this);
+        // Starta a SDK
+        StartAppSDK.init(this, "210553663");
 
-        adView = new AdView(this, "326901805789557_561404239005978", AdSize.BANNER_HEIGHT_50);
-
-        interstitialAd = new InterstitialAd(this, "326901805789557_561568765656192");
-
-        InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {
-            @Override
-            public void onInterstitialDisplayed(Ad ad) {
-                Log.e(TAG, "Interstitial ad displayed.");
-            }
-
-            @Override
-            public void onInterstitialDismissed(Ad ad) {
-                Log.e(TAG, "Interstitial ad dismissed.");
-            }
-
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                Log.e(TAG, "Interstitial ad failed to load: " + adError.getErrorMessage());
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-// Interstitial ad is loaded and ready to be displayed
-                Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!");
-                // Show the ad
-                interstitialAd.show();
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-                Log.d(TAG, "Interstitial ad clicked!");
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
-                Log.d(TAG, "Interstitial ad impression logged!");
-            }
-        };
-
-        interstitialAd.loadAd(
-                interstitialAd.buildLoadAdConfig().withAdListener(interstitialAdListener).build()
-        );
-
-        AdListener adListener = new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                // Ad error callback
-                Toast.makeText(
-                                MainActivity.this,
-                                "Error: " + adError.getErrorMessage(),
-                                Toast.LENGTH_LONG)
-                        .show();
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        };
-// Find the Ad Container
-        LinearLayout adContainer = (LinearLayout) findViewById(R.id.banner_container);
-
-// Add the ad view to your activity layout
-        adContainer.addView(adView);
-
-// Request an ad
-        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build());
-
+        //Mostra o Interstitial Ad
+        StartAppAd.showAd(getApplicationContext());
 
         //preferencias = new AnotacaoPreferencias(getApplication());
 

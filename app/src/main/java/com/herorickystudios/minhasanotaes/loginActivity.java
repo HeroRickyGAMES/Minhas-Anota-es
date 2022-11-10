@@ -23,13 +23,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import com.facebook.ads.*;
-
 public class loginActivity extends AppCompatActivity {
 
-    private AdView adView;
-
-    private boolean testMode = true;
+    private boolean testMode = false;
 
     private TextView editEmaillg, editSenhalg;
 
@@ -43,38 +39,6 @@ public class loginActivity extends AppCompatActivity {
 
         editEmaillg = findViewById(R.id.editEmaillg);
         editSenhalg = findViewById(R.id.editSenhalg);
-
-        adView = new AdView(this, "326901805789557_561404239005978", AdSize.BANNER_HEIGHT_50);
-
-        AdListener adListener = new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        };
-// Find the Ad Container
-        LinearLayout adContainer = (LinearLayout) findViewById(R.id.banner_container);
-
-// Add the ad view to your activity layout
-        adContainer.addView(adView);
-
-// Request an ad
-        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build());
 
         checkinternet();
     }

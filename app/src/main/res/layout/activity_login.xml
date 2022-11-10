@@ -54,7 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <LinearLayout
+    <com.startapp.sdk.ads.banner.Banner
         android:id="@+id/banner_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"

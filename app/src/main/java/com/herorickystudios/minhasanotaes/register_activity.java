@@ -29,14 +29,11 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.facebook.ads.*;
 import java.util.concurrent.Executor;
 
 public class register_activity extends AppCompatActivity {
 
-    private boolean testMode = true;
-
-    private AdView adView;
+    private boolean testMode = false;
 
     String[] menssagens = {"Preencha todos os campos para continuar", "Cadastro feito com sucesso!"};
 
@@ -52,39 +49,6 @@ public class register_activity extends AppCompatActivity {
         editNome = findViewById(R.id.editNome);
         editEmail = findViewById(R.id.editEmail);
         editSenha = findViewById(R.id.editSenha);
-
-        adView = new AdView(this, "326901805789557_561404239005978", AdSize.BANNER_HEIGHT_50);
-
-        AdListener adListener = new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        };
-
-// Find the Ad Container
-        LinearLayout adContainer = (LinearLayout) findViewById(R.id.banner_container);
-
-// Add the ad view to your activity layout
-        adContainer.addView(adView);
-
-// Request an ad
-        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build());
 
         checkinternet();
 

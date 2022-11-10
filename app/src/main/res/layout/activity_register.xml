@@ -69,7 +69,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.36" />
 
-    <LinearLayout
+    <com.startapp.sdk.ads.banner.Banner
         android:id="@+id/banner_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
