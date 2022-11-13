@@ -33,6 +33,7 @@ android {
 
 dependencies {
     //Start.io Ads
+    // noinspection GradleDynamicVersion
     implementation 'com.startapp:inapp-sdk:4.10.+'
 
     //firebase components

@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.startapp.sdk.adsbase.StartAppSDK;
 
 public class loginActivity extends AppCompatActivity {
 
@@ -39,6 +40,9 @@ public class loginActivity extends AppCompatActivity {
 
         editEmaillg = findViewById(R.id.editEmaillg);
         editSenhalg = findViewById(R.id.editSenhalg);
+
+        // NOTE always use test ads during development and testing
+        StartAppSDK.setTestAdsEnabled(false);
 
         checkinternet();
     }

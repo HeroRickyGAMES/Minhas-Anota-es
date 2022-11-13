@@ -19,6 +19,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     //private AnotacaoPreferencias preferencias;
     private EditText editAnotacao;
 
+    AlertDialog alertDialog;
+
     private FirebaseDatabase referencia = FirebaseDatabase.getInstance();
 
     FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
@@ -67,11 +70,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         editAnotacao = findViewById(R.id.editAnotacao);
 
-        // Starta a SDK
-        StartAppSDK.init(this, "210553663");
+        alertDialog = new AlertDialog.Builder(MainActivity.this)
+//set icon
+                .setIcon(R.drawable.ic_baseline_save_alt_24)
+//set title
+                .setTitle("Por favor espere!")
+//set message
+                .setMessage("Espere enquanto carregamos informações do Banco de dados")
 
-        //Mostra o Interstitial Ad
-        StartAppAd.showAd(getApplicationContext());
+                .setNegativeButton("Dispensar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }).show();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.dismiss();
+            }
+        }, 10000);
+
 
         //preferencias = new AnotacaoPreferencias(getApplication());
 
@@ -102,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         //Database push
         DatabaseReference reference = referencia.getReference();
 
@@ -110,37 +130,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this)
-//set icon
-                        .setIcon(R.drawable.ic_baseline_save_alt_24)
-//set title
-                        .setTitle("Por favor espere!")
-//set message
-                        .setMessage("Espere enquanto carregamos informações do Banco de dados")
-
-                        .setNegativeButton("Dispensar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-
-                        .show();
-
-
-
                 String uid = usuario.getUid();
 
                 Log.i("FIREBASE", snapshot.getValue().toString());
                 String anotacao = snapshot.child("Usuarios").child(uid).child("anotacao").getValue().toString();
 
                 editAnotacao.setText(anotacao);
-
-                if(anotacao.equals(editAnotacao.getText().toString())){
-
-                    alertDialog.dismiss();
-
-                }
 
             }
 
@@ -160,6 +155,8 @@ public class MainActivity extends AppCompatActivity {
         checkinternet();
 
 
+        //Mostra o Interstitial Ad
+        StartAppAd.showAd(this);
 
   /*      if(ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
@@ -194,19 +191,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        super.onRestart();
+
+        if(alertDialog.isShowing()){
+            alertDialog.dismiss();
+        }
+
+
         Intent intent = new Intent(this, Autenticacao_activity.class);
         startActivity(intent);
+
+        super.onRestart();
     }
-
-    @Override
-    protected void onResume() {
-
-        super.onResume();
-    }
-
     @Override
     protected void onPause() {
+
+        if(alertDialog.isShowing()){
+            alertDialog.dismiss();
+        }
 
         //Quando o aplicativo entra em segundo plano ele executa essa função!
         String textoRecuperado = editAnotacao.getText().toString();
@@ -230,9 +231,9 @@ public class MainActivity extends AppCompatActivity {
 
             referenciaP.child(uid).child("anotacao").setValue(textoRecuperado);
 
-            super.onPause();
-
         }
+
+        super.onPause();
     }
 
     public void serverStatusbtn(View view){
