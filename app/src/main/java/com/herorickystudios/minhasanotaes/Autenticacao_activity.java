@@ -10,14 +10,12 @@ import android.content.Intent;
 import androidx.biometric.BiometricPrompt;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import java.util.concurrent.Executor;
 
 public class Autenticacao_activity extends AppCompatActivity {
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +40,26 @@ public class Autenticacao_activity extends AppCompatActivity {
             @Override
             public void onAuthenticationError(int errorCode, CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
-                notificarUsuario(errString.toString());
+                //notificarUsuario(errString.toString());
+
+                System.out.println(errString);
+
+                if(errString.toString().equals(errString.toString())){
+
+                    Intent intent1 = new Intent(Settings.ACTION_SECURITY_SETTINGS);
+
+                    Toast.makeText(Autenticacao_activity.this, "Você não tem uma tela de bloqueio!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Autenticacao_activity.this, "Você precisa colocar uma para usar!", Toast.LENGTH_SHORT).show();
+
+                    startActivityForResult(intent1, 0);
+
+                }
             }
 
             @Override
             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                notificarUsuario("Autenticação Aprovada!");
+                //notificarUsuario("Autenticação Aprovada!");
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
@@ -56,7 +67,7 @@ public class Autenticacao_activity extends AppCompatActivity {
             @Override
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
-                notificarUsuario("Autenticação falhou!");
+                //notificarUsuario("Autenticação falhou!");
             }
         };
         BiometricPrompt biometricPrompt = new BiometricPrompt(this, executor, callback);
