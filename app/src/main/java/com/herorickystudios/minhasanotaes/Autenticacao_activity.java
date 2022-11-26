@@ -59,6 +59,7 @@ public class Autenticacao_activity extends AppCompatActivity {
             @Override
             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
+
                 //notificarUsuario("Autenticação Aprovada!");
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
@@ -77,4 +78,18 @@ public class Autenticacao_activity extends AppCompatActivity {
         Toast.makeText(this, menssage, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onResume() {
+        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Use sua digital ou padrão!")
+                .setSubtitle("Para entrar no aplicativo e ver as anotações")
+                // Can't call setNegativeButtonText() and
+                // setAllowedAuthenticators(...|DEVICE_CREDENTIAL) at the same time.
+                // .setNegativeButtonText("Use account password")
+                .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG |BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                .build();
+        getPrompt().authenticate(promptInfo);
+
+        super.onResume();
+    }
 }

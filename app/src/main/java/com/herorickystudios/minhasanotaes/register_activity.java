@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
@@ -29,6 +31,11 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 public class register_activity extends AppCompatActivity {
@@ -37,7 +44,8 @@ public class register_activity extends AppCompatActivity {
 
     String[] menssagens = {"Preencha todos os campos para continuar", "Cadastro feito com sucesso!"};
 
-    public DatabaseReference referencia = FirebaseDatabase.getInstance().getReference("Usuarios");
+    FirebaseFirestore referencia = FirebaseFirestore.getInstance();
+
 
     private EditText editNome, editEmail, editSenha;
 
@@ -56,6 +64,7 @@ public class register_activity extends AppCompatActivity {
 
     public void registerbtn(View view){
         String email = editEmail.getText().toString();
+
         String senha = editSenha.getText().toString();
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -75,9 +84,32 @@ public class register_activity extends AppCompatActivity {
                     String email = editEmail.getText().toString();
                     String anotacaouser = "";
 
-                    referencia.child(getUID).child("username").setValue(nome);
-                    referencia.child(getUID).child("email").setValue(email);
-                    referencia.child(getUID).child("anotacao").setValue(anotacaouser);
+                    DocumentReference setDB = referencia.collection("Usuarios").document(getUID);
+
+                    // Create a new user with a first and last name
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("username", nome);
+                    user.put("email", email);
+                    user.put("anotacao-0", anotacaouser);
+                    user.put("id",getUID);
+
+                    //referencia.collection("Usuarios");
+
+                    setDB.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            System.out.println("Erro ao adicionar usuario no banco: " + e);
+                        }
+                    });
+
+                    //referencia.child(getUID).child("username").setValue(nome);
+                    //referencia.child(getUID).child("email").setValue(email);
+                    //referencia.child(getUID).child("anotacao").setValue(anotacaouser);
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -107,6 +139,7 @@ public class register_activity extends AppCompatActivity {
 
             }
         });
+
     }
 
     public void checkinternet(){

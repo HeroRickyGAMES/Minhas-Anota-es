@@ -10,6 +10,10 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
 
@@ -33,6 +37,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.herorickystudios.minhasanotaes.databinding.ActivityMainBinding;
 import com.startapp.sdk.adsbase.StartAppAd;
 import com.startapp.sdk.adsbase.StartAppSDK;
@@ -40,6 +49,9 @@ import com.startapp.sdk.adsbase.StartAppSDK;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,17 +61,19 @@ public class MainActivity extends AppCompatActivity {
     //private AnotacaoPreferencias preferencias;
     private EditText editAnotacao;
 
-    AlertDialog alertDialog;
 
-    private FirebaseDatabase referencia = FirebaseDatabase.getInstance();
+    FirebaseFirestore referencia = FirebaseFirestore.getInstance();
 
     FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
     //Data base
     private FirebaseDatabase database;
 
+    FirebaseUser usuarioLogado = FirebaseAuth.getInstance().getCurrentUser();
+
     //referencia para o usuario
-    private DatabaseReference referenciaP = FirebaseDatabase.getInstance().getReference("Usuarios");
+    DocumentReference referenciaP = referencia.collection("Usuarios").document(usuarioLogado.getUid());
+    //private DatabaseReference referenciaP = FirebaseDatabase.getInstance().getReference("Usuarios");
 
 
     @RequiresApi(api = 33)
@@ -70,28 +84,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         editAnotacao = findViewById(R.id.editAnotacao);
 
-        alertDialog = new AlertDialog.Builder(MainActivity.this)
-//set icon
-                .setIcon(R.drawable.ic_baseline_save_alt_24)
-//set title
-                .setTitle("Por favor espere!")
-//set message
-                .setMessage("Espere enquanto carregamos informações do Banco de dados")
 
-                .setNegativeButton("Dispensar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                }).show();
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                alertDialog.dismiss();
-            }
-        }, 10000);
 
 
         //preferencias = new AnotacaoPreferencias(getApplication());
@@ -100,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String textoRecuperado = editAnotacao.getText().toString();
+                String textoRecuperado = editAnotacao.getText().toString().replaceAll("\n", "  ");
 
                 if (textoRecuperado.equals("")) {
                     Snackbar.make(view, "Preencha a anotação!", Snackbar.LENGTH_LONG).show();
@@ -117,40 +110,55 @@ public class MainActivity extends AppCompatActivity {
 
                     String uid = usuario.getUid();
 
-                    referenciaP.child(uid).child("anotacao").setValue(textoRecuperado);
+                    // Create a new user with a first and last name
+                    Map<String, Object> anotacao = new HashMap<>();
+                    anotacao.put("anotacao-0", textoRecuperado);
+
+
+                    referenciaP.update(anotacao).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            System.out.println("Erro ao adicionar anotação no banco: " + e);
+                        }
+                    });
+
+                    //referenciaP.child(uid).child("anotacao").setValue(textoRecuperado);
 
                 }
             }
         });
 
         //Database push
-        DatabaseReference reference = referencia.getReference();
+        //DatabaseReference reference = referencia.getReference();
 
-        reference.addValueEventListener(new ValueEventListener() {
+        DocumentReference onScreen =  referencia.collection("Usuarios").document(usuarioLogado.getUid());
+
+        onScreen.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isComplete()){
+                    DocumentSnapshot document = task.getResult();
 
-                String uid = usuario.getUid();
+                    if(document.exists()){
+                        String Anotação = document.getString("anotacao-0");
 
-                Log.i("FIREBASE", snapshot.getValue().toString());
-                String anotacao = snapshot.child("Usuarios").child(uid).child("anotacao").getValue().toString();
+                        editAnotacao.setText(Anotação);
 
-                editAnotacao.setText(anotacao);
-
+                    }
+                }
             }
-
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.i("FIREBASE", "Ocorreu um erro ao acessar o banco de dados da aplicação, certifique-se se está tudo certo com o codigo ou a internet" + error);
+            public void onFailure(@NonNull Exception e) {
+
             }
         });
 
-        //Recuperar Anotação
-        //String anotacao =  preferencias.recuperarAnotacao();
-        /*String anotacao =  "testee";
-        if( !anotacao.equals("") ){
-            editAnotacao.setText(anotacao);
-        }*/
 
         checkinternet();
 
@@ -158,15 +166,6 @@ public class MainActivity extends AppCompatActivity {
         //Mostra o Interstitial Ad
         StartAppAd.showAd(this);
 
-  /*      if(ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
-                == PackageManager.PERMISSION_GRANTED){
-
-        }else{
-
-            Toast.makeText(MainActivity.this, "Habilite as notificações nas configurações para receber as atualizações sobre o servidor", Toast.LENGTH_LONG).show();
-            Toast.makeText(MainActivity.this, "ou sobre atualizações do aplicativo!", Toast.LENGTH_LONG).show();
-        }*/
     }
 
     public void checkinternet() {
@@ -192,22 +191,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
 
-        if(alertDialog.isShowing()){
-            alertDialog.dismiss();
-        }
-
-
-        Intent intent = new Intent(this, Autenticacao_activity.class);
+        Intent intent = new Intent(MainActivity.this, Autenticacao_activity.class);
         startActivity(intent);
 
         super.onRestart();
     }
     @Override
-    protected void onPause() {
+    protected void onStop() {
 
-        if(alertDialog.isShowing()){
-            alertDialog.dismiss();
-        }
 
         //Quando o aplicativo entra em segundo plano ele executa essa função!
         String textoRecuperado = editAnotacao.getText().toString();
@@ -229,11 +220,29 @@ public class MainActivity extends AppCompatActivity {
 
             String uid = usuario.getUid();
 
-            referenciaP.child(uid).child("anotacao").setValue(textoRecuperado);
+            // Create a new user with a first and last name
+            Map<String, Object> anotacao = new HashMap<>();
+            anotacao.put("anotacao-0", textoRecuperado);
+
+
+            referenciaP.update(anotacao).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    System.out.println("Erro ao adicionar anotação no banco: " + e);
+                }
+            });
+
+            //referenciaP.child(uid).child("anotacao").setValue(textoRecuperado);
 
         }
 
-        super.onPause();
+        super.onStop();
+
     }
 
     public void serverStatusbtn(View view){
