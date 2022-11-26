@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String textoRecuperado = editAnotacao.getText().toString().replaceAll("\n", "  ");
+                String textoRecuperado = editAnotacao.getText().toString();
 
                 if (textoRecuperado.equals("")) {
                     Snackbar.make(view, "Preencha a anotação!", Snackbar.LENGTH_LONG).show();
