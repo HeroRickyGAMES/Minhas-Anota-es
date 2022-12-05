@@ -63,6 +63,8 @@ public class Autenticacao_activity extends AppCompatActivity {
                 //notificarUsuario("Autenticação Aprovada!");
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+
+                onStop();
             }
 
             @Override
@@ -74,10 +76,6 @@ public class Autenticacao_activity extends AppCompatActivity {
         BiometricPrompt biometricPrompt = new BiometricPrompt(this, executor, callback);
         return biometricPrompt;
     }
-    private void notificarUsuario(String menssage){
-        Toast.makeText(this, menssage, Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     protected void onResume() {
         BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
@@ -91,5 +89,10 @@ public class Autenticacao_activity extends AppCompatActivity {
         getPrompt().authenticate(promptInfo);
 
         super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

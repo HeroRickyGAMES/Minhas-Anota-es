@@ -3,6 +3,7 @@ package com.herorickystudios.minhasanotaes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -85,5 +86,16 @@ public class ServerStatus_Activity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+
+        startActivity(intent);
+
+        onStop();
+
+        super.onBackPressed();
     }
 }

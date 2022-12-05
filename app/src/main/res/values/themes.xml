@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MinhasAnotações" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Theme.MinhasAnotações" parent="Theme.Material3.Dark.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/fundostatus</item>
+        <item name="colorPrimaryVariant">@color/purple_500</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -13,6 +13,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="colorSurface">@color/purple_500</item>
     </style>
 
     <style name="Theme.MinhasAnotações.NoActionBar">
@@ -23,4 +24,5 @@
     <style name="Theme.MinhasAnotações.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MinhasAnotações.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
