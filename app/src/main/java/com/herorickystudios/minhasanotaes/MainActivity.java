@@ -5,6 +5,7 @@ package com.herorickystudios.minhasanotaes;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -246,7 +247,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void serverStatusbtn(View view){
-        Intent intent = new Intent(this, ServerStatus_Activity.class);
-        startActivity(intent);
+
+        DocumentReference onScreen =  referencia.collection("Servidor").document("saúde-do-servidor");
+
+        onScreen.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isComplete()){
+
+                    DocumentSnapshot document = task.getResult();
+
+                    if(document.exists()){
+                        String status_do_servidor = document.getString("status-do-servidor");
+
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("Status do Servidor")
+                                .setMessage("Status do Servidor: " + status_do_servidor)
+                                .setCancelable(true)
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                }).show();
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 }

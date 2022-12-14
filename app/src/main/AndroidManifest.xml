@@ -36,9 +36,6 @@
             android:exported="false" />
         <!-- Activities -->
         <activity
-            android:name=".ServerStatus_Activity"
-            android:exported="false" />
-        <activity
             android:name=".Autenticacao_activity"
             android:exported="false" />
         <activity
