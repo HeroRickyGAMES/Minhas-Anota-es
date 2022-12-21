@@ -1,4 +1,4 @@
-package com.herorickystudios.minhasanotaes;
+package com.herorickystudiosoficial.minhasanotaes;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.herorickystudios.minhasanotaes.databinding.FragmentSecondBinding;
+import com.herorickystudiosoficial.minhasanotaes.databinding.FragmentSecondBinding;
 
 public class SecondFragment extends Fragment {
 

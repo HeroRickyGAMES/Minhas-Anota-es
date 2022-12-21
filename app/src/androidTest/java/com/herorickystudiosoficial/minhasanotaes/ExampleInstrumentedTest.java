@@ -1,4 +1,4 @@
-package com.herorickystudios.minhasanotaes;
+package com.herorickystudiosoficial.minhasanotaes;
 
 import android.content.Context;
 
