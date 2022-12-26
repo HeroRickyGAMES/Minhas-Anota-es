@@ -10,8 +10,8 @@ android {
         applicationId "com.herorickystudiosoficial.minhasanotaes"
         minSdk 23
         targetSdk 33
-        versionCode 25
-        versionName "3.1.0"
+        versionCode 26
+        versionName "3.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
